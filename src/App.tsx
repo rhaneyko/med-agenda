@@ -1,24 +1,32 @@
 // src/App.tsx
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router";
+import { BrowserRouter as Router, Route, Routes } from "react-router";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Agendamentos from "./pages/Agendamentos";
-import Pacientes from "./pages/Pacientes";
 import Configuracoes from "./pages/Configuracoes";
+import Login from './pages/Login'
+import Register from './pages/Register'
+import { AuthProvider } from "./context/authContext";
+import ProtectedRoute from "./components/ProtecdedRoute";
 
 const App: React.FC = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-          <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="agendamentos" element={<Agendamentos />} />
-          <Route path="pacientes" element={<Pacientes />} />
-          <Route path="configuracoes" element={<Configuracoes />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<ProtectedRoute />}>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="/agendamentos" element={<Agendamentos />} />
+              <Route path="/configuracoes" element={<Configuracoes />} />
+            </Route>
+          </Route>
+          <Route path="/login" element={<Login />} />
+          <Route path="/registrar" element={<Register />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 };
 
