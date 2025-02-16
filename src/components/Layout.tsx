@@ -1,17 +1,20 @@
+// src/components/Layout.tsx
 import React from "react";
 import { Outlet } from "react-router";
-import Sidebar from "./SideBar";
+import Sidebar from "./Sidebar";
 
 const Layout: React.FC = () => {
-    return(
-        <div className="d-flex">
-            <Sidebar/>
+  return (
+    <div className="d-flex">
+      {/* Sidebar sempre visível */}
+      <Sidebar />
 
-            <div className="flex-grow-1 p-4">
-                <Outlet/>
-            </div>
-        </div>
-    )
-}
+      {/* Conteúdo dinâmico das páginas */}
+      <div className="flex-grow-1 p-4">
+        <Outlet />
+      </div>
+    </div>
+  );
+};
 
 export default Layout;
