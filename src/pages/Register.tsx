@@ -99,8 +99,7 @@ const Register: React.FC = () => {
               onChange={(e) => setUserType(e.target.value)}
             >
               <option value="medico">Médico</option>
-              <option value="enfermeiro">Enfermeiro</option>
-              <option value="tecnico">Técnico de Enfermagem</option>
+              <option value="enfermeiro">Secretária(o)</option>
               <option value="admin">Administrador</option>
             </select>
           </div>

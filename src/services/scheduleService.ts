@@ -1,9 +1,8 @@
-// src/services/scheduleService.ts
-import { collection, addDoc, getDocs, Timestamp, query, orderBy } from "firebase/firestore";
+import { collection, addDoc, getDocs, Timestamp, query, orderBy, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 
 interface Appointment {
-  id: string; // Campo id adicionado
+  id: string;
   userId: string;
   patientName: string;
   userName: string;
@@ -13,18 +12,18 @@ interface Appointment {
   time: string;
   reason: string;
   createdAt: Timestamp;
+  status?: "finalizada";
 }
 
 // Criar um novo agendamento
-export const createAppointment = async (appointment: Omit<Appointment, "createdAt" | "id">) => {
+export const createAppointment = async (appointment: Omit<Appointment, "createdAt">) => {
   try {
     const appointmentData = {
       ...appointment,
-      createdAt: Timestamp.now(), // Adiciona a data do agendamento
+      createdAt: Timestamp.now(),
     };
 
     const docRef = await addDoc(collection(db, "appointments"), appointmentData);
-    console.log("Agendamento criado com sucesso! ID:", docRef.id);
     return docRef.id;
   } catch (error) {
     console.error("Erro ao criar agendamento:", error);
@@ -33,25 +32,63 @@ export const createAppointment = async (appointment: Omit<Appointment, "createdA
 };
 
 // Buscar todos os agendamentos
-export const getAppointments = async (): Promise<Appointment[]> => {
+export const getAppointments = async () => {
   try {
     const appointmentsQuery = query(collection(db, "appointments"), orderBy("createdAt", "desc"));
     const querySnapshot = await getDocs(appointmentsQuery);
 
     return querySnapshot.docs.map((doc) => ({
-      id: doc.id, // Inclui o id do documento
-      userId: doc.data().userId,
-      patientName: doc.data().patientName,
-      userName: doc.data().userName,
-      userEmail: doc.data().userEmail,
-      doctor: doc.data().doctor,
-      date: doc.data().date,
-      time: doc.data().time,
-      reason: doc.data().reason,
-      createdAt: doc.data().createdAt,
-    }));
+      id: doc.id,
+      ...doc.data(),
+    })) as Appointment[];
   } catch (error) {
     console.error("Erro ao buscar agendamentos:", error);
     throw new Error("Erro ao buscar agendamentos.");
+  }
+};
+
+// Editar um agendamento
+export const updateAppointment = async (id: string, updatedData: Partial<Appointment>) => {
+  try {
+    const appointmentRef = doc(db, "appointments", id);
+    await updateDoc(appointmentRef, updatedData);
+    console.log("Agendamento atualizado com sucesso!");
+  } catch (error) {
+    console.error("Erro ao atualizar agendamento:", error);
+    throw new Error("Erro ao atualizar o agendamento.");
+  }
+};
+
+// Excluir um agendamento
+export const deleteAppointment = async (id: string) => {
+  try {
+    const appointmentRef = doc(db, "appointments", id);
+    await deleteDoc(appointmentRef);
+    console.log("Agendamento excluído com sucesso!");
+  } catch (error) {
+    console.error("Erro ao excluir agendamento:", error);
+    throw new Error("Erro ao excluir o agendamento.");
+  }
+};
+
+// Finalizar consulta
+export const finalizeAppointment = async (appointmentId: string) => {
+  try {
+    const appointmentRef = doc(db, "appointments", appointmentId);
+    await updateDoc(appointmentRef, { status: "finalizada" });
+  } catch (error) {
+    console.error("Erro ao finalizar consulta:", error);
+    throw new Error("Erro ao finalizar consulta.");
+  }
+};
+
+// Cancelar consulta
+export const cancelAppointment = async (appointmentId: string) => {
+  try {
+    const appointmentRef = doc(db, "appointments", appointmentId);
+    await deleteDoc(appointmentRef);
+  } catch (error) {
+    console.error("Erro ao cancelar consulta:", error);
+    throw new Error("Erro ao cancelar consulta.");
   }
 };

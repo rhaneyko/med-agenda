@@ -3,6 +3,9 @@ import { NavLink } from "react-router-dom"; // Importa NavLink
 import { useAuth } from "../context/authContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import { RiMenu2Fill } from "react-icons/ri";
+import { FcHome, FcCalendar, FcSettings   } from "react-icons/fc";
+
 const Sidebar: React.FC = () => {
   const { user, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(true);
@@ -20,7 +23,7 @@ const Sidebar: React.FC = () => {
         onClick={() => setIsOpen(!isOpen)}
         style={{ zIndex: 1000 }}
       >
-        ☰
+        <RiMenu2Fill />
       </button>
 
       <div
@@ -37,19 +40,19 @@ const Sidebar: React.FC = () => {
             <h4 className="text-center ms-4 mt-2">Med-Agenda</h4>
             <ul className="nav nav-pills flex-column mb-auto">
               <li className="nav-item">
-                <NavLink to="/" className="nav-link text-dark" activeClassName="active">
-                  🏠 Home
+                <NavLink to="/" className="nav-link text-dark">
+                <FcHome /> Home
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/agendamentos" className="nav-link text-dark" activeClassName="active">
-                  📅 Agendamentos
+                <NavLink to="/agendamentos" className="nav-link text-dark">
+                <FcCalendar /> Agendamentos
                 </NavLink>
               </li>
-              {user?.userType === "admin" && (
+              {user?.userType === "administrador" && (
                 <li>
-                  <NavLink to="/configuracoes" className="nav-link text-dark" activeClassName="active">
-                    ⚙️ Configurações
+                  <NavLink to="/configuracoes" className="nav-link text-dark">
+                  <FcSettings /> Configurações
                   </NavLink>
                 </li>
               )}
@@ -57,7 +60,7 @@ const Sidebar: React.FC = () => {
 
             {/* Botão de Logout */}
             <button className="btn btn-danger w-100 mt-3" onClick={handleLogout}>
-              🚪 Sair
+              Sair
             </button>
           </>
         )}
