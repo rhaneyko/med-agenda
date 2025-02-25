@@ -116,6 +116,8 @@ const Agendamentos: React.FC = () => {
         </tbody>
       </Table>
 
+      <a href="/criar-agendamento" className="btn btn-primary">Agendar</a>
+
       {/* Modal de Edição */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
