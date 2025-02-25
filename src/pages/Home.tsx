@@ -53,14 +53,32 @@ const Home: React.FC = () => {
   };
 
   const handleFinalize = async (appointmentId: string) => {
-    await finalizeAppointment(appointmentId);
-    fetchAppointments();
+    if (!appointmentId) {
+      alert("ID do agendamento inválido.");
+      return;
+    }
+
+    try {
+      await finalizeAppointment(appointmentId);
+      fetchAppointments();
+    } catch {
+      alert("Erro ao finalizar consulta.");
+    }
   };
 
   const handleCancel = async (appointmentId: string) => {
+    if (!appointmentId) {
+      alert("ID do agendamento inválido.");
+      return;
+    }
+
     if (window.confirm("Tem certeza que deseja cancelar esta consulta?")) {
-      await cancelAppointment(appointmentId);
-      fetchAppointments();
+      try {
+        await cancelAppointment(appointmentId);
+        fetchAppointments();
+      } catch {
+        alert("Erro ao cancelar consulta.");
+      }
     }
   };
 
@@ -98,13 +116,33 @@ const Home: React.FC = () => {
               todayAppointments.map((appt) => (
                 <ListGroup.Item key={appt.id}>
                   <FcClock /> {appt.time} - {appt.patientName} ({appt.doctor})
-                  
-                  <Button variant="success" size="sm" className="ms-2" onClick={() => handleFinalize(appt.id)}>
-                    ✔ Finalizar
-                  </Button>
-                  <Button variant="danger" size="sm" className="ms-2" onClick={() => handleCancel(appt.id)}>
-                    ❌ Cancelar
-                  </Button>
+
+                  <ListGroup.Item key={appt.id}>
+                    <FcClock /> {appt.time} - {appt.patientName} ({appt.doctor})
+                    <Button
+                      variant="success"
+                      size="sm"
+                      className="ms-2"
+                      onClick={() => {
+                        handleFinalize(appt.id ?? "ID Não Encontrado");
+                      }}
+                    >
+                      ✔ Finalizar
+                    </Button>
+
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      className="ms-2"
+                      onClick={() => {
+                        handleCancel(appt.id ?? "ID Não Encontrado");
+                      }}
+                    >
+                      ❌ Cancelar
+                    </Button>
+                  </ListGroup.Item>
+
+
                 </ListGroup.Item>
               ))
             ) : (
@@ -140,7 +178,7 @@ const Home: React.FC = () => {
             <Card.Body>
               <Card.Title><FcCalendar /> Novo Agendamento</Card.Title>
               <Card.Text>Agende uma nova consulta rapidamente.</Card.Text>
-              <a href="/agendamentos" className="btn btn-primary">Agendar</a>
+              <a href="/criar-agendamento" className="btn btn-primary">Agendar</a>
             </Card.Body>
           </Card>
         </Col>
