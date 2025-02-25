@@ -9,6 +9,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import { AuthProvider } from "./context/authContext";
 import ProtectedRoute from "./components/ProtecdedRoute";
+import CriacaoAgendamento from "./pages/CriacaoAgendamento";
 
 const App: React.FC = () => {
   return (
@@ -20,6 +21,7 @@ const App: React.FC = () => {
               <Route index element={<Home />} />
               <Route path="/agendamentos" element={<Agendamentos />} />
               <Route path="/configuracoes" element={<Configuracoes />} />
+              <Route path="/criar-agendamento" element={<CriacaoAgendamento />} />
             </Route>
           </Route>
           <Route path="/login" element={<Login />} />
